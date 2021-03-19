@@ -43,6 +43,16 @@ extension ViewController {
     }
 }
 
+// MARK: - Helpers
+extension ViewController {
+    private func createImageViewForAnnotation(annotationView: MKMarkerAnnotationView, imageName: String) -> UIImageView {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: annotationView.frame.height, height: annotationView.frame.height))
+        imageView.image = UIImage(named: imageName)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+}
+
 // MARK: - Map Related
 extension ViewController {
     private func setupMapView() {
@@ -55,6 +65,12 @@ extension ViewController {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.startUpdatingLocation()
+    }
+    private func setUserRegion(userLocation: MKUserLocation) {
+        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate,
+                                        latitudinalMeters: 10,
+                                        longitudinalMeters: 10)
+        mapView.setRegion(region, animated: true)
     }
     private func addAnnotationToMap() {
         let annotation = MKPointAnnotation()
@@ -75,11 +91,18 @@ extension ViewController: CLLocationManagerDelegate {
 // MARK: - MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-//        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate,
-//                                        latitudinalMeters: 10,
-//                                        longitudinalMeters: 10)
-//        mapView.setRegion(region, animated: true)
+//        setUserRegion(userLocation: userLocation)
         addAnnotationToMap()
+    }
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKUserLocation { return nil }
+//        var marker = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation") as? MKAnnotationView
+        let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
+        annotationView.glyphText = "Coffee"
+        annotationView.canShowCallout = true
+        annotationView.leftCalloutAccessoryView = createImageViewForAnnotation(annotationView: annotationView, imageName: "coffee")
+        annotationView.rightCalloutAccessoryView = createImageViewForAnnotation(annotationView: annotationView, imageName: "coffee2")
+        return annotationView
     }
 }
 
