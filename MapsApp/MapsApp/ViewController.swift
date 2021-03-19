@@ -12,13 +12,33 @@ class ViewController: UIViewController {
 
     // MARK: - Properties
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
     fileprivate let locationManager = CLLocationManager()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        setBasics()
         setupMapView()
         setupLocationManager()
+    }
+}
+
+// MARK: - Selectors
+extension ViewController {
+    @objc
+    func didTapSegmentedControl(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            mapView.mapType = .standard
+        case 1:
+            mapView.mapType = .satellite
+        case 2:
+            mapView.mapType = .hybrid
+        default:
+            return
+        }
     }
 }
 
@@ -45,4 +65,11 @@ extension ViewController: CLLocationManagerDelegate {
 // MARK: - MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     
+}
+
+// MARK: - Basics
+extension ViewController {
+    private func setBasics() {
+        segmentedControl.addTarget(self, action: #selector(didTapSegmentedControl(_:)), for: .valueChanged)
+    }
 }
