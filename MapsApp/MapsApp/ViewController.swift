@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    fileprivate let locationManager = CLLocationManager()
+    private let locationManager = CLLocationManager()
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -22,6 +22,7 @@ class ViewController: UIViewController {
         setBasics()
         setupMapView()
         setupLocationManager()
+//        addAnnotationToMap()
     }
 }
 
@@ -55,6 +56,15 @@ extension ViewController {
         locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.startUpdatingLocation()
     }
+    private func addAnnotationToMap() {
+        let annotation = MKPointAnnotation()
+//        annotation.coordinate = CLLocationCoordinate2D(latitude: 37.85, longitude: -122.4194)
+        annotation.coordinate = mapView.userLocation.coordinate
+        annotation.title = "Kas Song"
+        annotation.subtitle = "I'm here"
+        print(mapView.userLocation.coordinate)
+        mapView.addAnnotation(annotation)
+    }
 }
 
 // MARK: - CLLocationManagerDelegate
@@ -65,10 +75,11 @@ extension ViewController: CLLocationManagerDelegate {
 // MARK: - MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate,
-                                        latitudinalMeters: 10,
-                                        longitudinalMeters: 10)
-        mapView.setRegion(region, animated: true)
+//        let region = MKCoordinateRegion(center: mapView.userLocation.coordinate,
+//                                        latitudinalMeters: 10,
+//                                        longitudinalMeters: 10)
+//        mapView.setRegion(region, animated: true)
+        addAnnotationToMap()
     }
 }
 
