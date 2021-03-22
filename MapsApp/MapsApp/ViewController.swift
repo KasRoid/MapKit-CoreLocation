@@ -135,14 +135,21 @@ extension ViewController: MKMapViewDelegate {
     }
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation { return nil }
-//        var marker = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation") as? MKAnnotationView
+//        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation") as? MKAnnotationView
         let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
+        annotationView.clusteringIdentifier = "coffee "
         annotationView.glyphText = "Coffee"
         annotationView.canShowCallout = true
         annotationView.leftCalloutAccessoryView = createImageViewForAnnotation(annotationView: annotationView, imageName: "coffee")
         annotationView.rightCalloutAccessoryView = createImageViewForAnnotation(annotationView: annotationView, imageName: "coffee2")
         setupMapSnapShot(annotationView: annotationView)
         return annotationView
+    }
+    func mapView(_ mapView: MKMapView, clusterAnnotationForMemberAnnotations memberAnnotations: [MKAnnotation]) -> MKClusterAnnotation {
+        let cluster = MKClusterAnnotation(memberAnnotations: memberAnnotations)
+        cluster.title = "Coffee, Games and Clothes"
+        cluster.subtitle = "a group of cool places."
+        return cluster
     }
 }
 
