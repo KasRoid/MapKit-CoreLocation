@@ -88,7 +88,6 @@ extension ViewController {
         annotation.coordinate = mapView.userLocation.coordinate
         annotation.title = "Kas Song"
         annotation.subtitle = "I'm here"
-        print(mapView.userLocation.coordinate)
         mapView.addAnnotation(annotation)
     }
     private func setupMapSnapShot(annotationView: MKAnnotationView) {
@@ -114,11 +113,20 @@ extension ViewController {
             guard error == nil,
                   let placemarks = placemarks,
                   let placemark = placemarks.first,
-                  let coordinates = placemark.location?.coordinate else { print(error!); return }
-            let newAnnotation = MKPointAnnotation()
-            newAnnotation.coordinate = coordinates
-            self.mapView.addAnnotation(newAnnotation)
+                  let coordinate = placemark.location?.coordinate else { print(error!); return }
+//            self.annotate(coordinate: coordinate)
+            self.openMaps(coordinate: coordinate)
         })
+    }
+    private func annotate(coordinate: CLLocationCoordinate2D) {
+        let newAnnotation = MKPointAnnotation()
+        newAnnotation.coordinate = coordinate
+        self.mapView.addAnnotation(newAnnotation)
+    }
+    private func openMaps(coordinate: CLLocationCoordinate2D) {
+        let destinationPlacemark = MKPlacemark(coordinate: coordinate)
+        let mapItem = MKMapItem(placemark: destinationPlacemark)
+        MKMapItem.openMaps(with: [mapItem], launchOptions: nil)
     }
 }
 
