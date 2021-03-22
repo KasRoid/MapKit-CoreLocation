@@ -74,12 +74,29 @@ extension ViewController {
     }
     private func addAnnotationToMap() {
         let annotation = MKPointAnnotation()
-//        annotation.coordinate = CLLocationCoordinate2D(latitude: 37.85, longitude: -122.4194)
+        //        annotation.coordinate = CLLocationCoordinate2D(latitude: 37.85, longitude: -122.4194)
         annotation.coordinate = mapView.userLocation.coordinate
         annotation.title = "Kas Song"
         annotation.subtitle = "I'm here"
         print(mapView.userLocation.coordinate)
         mapView.addAnnotation(annotation)
+    }
+    private func setupMapSnapShot(annotationView: MKAnnotationView) {
+        let options = MKMapSnapshotter.Options()
+        options.size = CGSize(width: 200, height: 200)
+        options.mapType = .satellite
+        guard let center = annotationView.annotation?.coordinate else { return }
+        options.camera = MKMapCamera(lookingAtCenter: center,
+                                     fromDistance: 150,
+                                     pitch: 60,
+                                     heading: 0)
+        let snapShotter = MKMapSnapshotter(options: options)
+        snapShotter.start(completionHandler: { snapshot, error in
+            guard error == nil, let snapshot = snapshot else { print(error!); return }
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+            imageView.image = snapshot.image
+            annotationView.detailCalloutAccessoryView = imageView
+        })
     }
 }
 
@@ -102,6 +119,7 @@ extension ViewController: MKMapViewDelegate {
         annotationView.canShowCallout = true
         annotationView.leftCalloutAccessoryView = createImageViewForAnnotation(annotationView: annotationView, imageName: "coffee")
         annotationView.rightCalloutAccessoryView = createImageViewForAnnotation(annotationView: annotationView, imageName: "coffee2")
+        setupMapSnapShot(annotationView: annotationView)
         return annotationView
     }
 }
