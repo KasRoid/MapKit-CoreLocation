@@ -30,13 +30,22 @@
                                     <segment title="Hybrid"/>
                                 </segments>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ynd-Sd-k6R">
+                                <rect key="frame" x="184" y="785" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="didTapButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kUP-1b-cFF"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ynd-Sd-k6R" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DCX-tq-WFI"/>
                             <constraint firstItem="a60-MR-Ir2" firstAttribute="centerX" secondItem="MkI-ic-Nqe" secondAttribute="centerX" id="HF1-Tw-iKd"/>
                             <constraint firstItem="MkI-ic-Nqe" firstAttribute="top" secondItem="a60-MR-Ir2" secondAttribute="bottom" constant="36" id="QUq-LW-FJp"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="MkI-ic-Nqe" secondAttribute="bottom" constant="14" id="W43-oL-OsB"/>
+                            <constraint firstItem="MkI-ic-Nqe" firstAttribute="top" secondItem="ynd-Sd-k6R" secondAttribute="bottom" constant="3" id="d91-6N-igd"/>
                             <constraint firstItem="MkI-ic-Nqe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="80" id="i0l-0e-c9O"/>
                             <constraint firstItem="a60-MR-Ir2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pRd-EE-kqa"/>
                             <constraint firstItem="a60-MR-Ir2" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="pSf-Gj-HQo"/>

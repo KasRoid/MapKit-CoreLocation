@@ -22,7 +22,17 @@ class ViewController: UIViewController {
         setBasics()
         setupMapView()
         setupLocationManager()
-//        addAnnotationToMap()
+    }
+    
+    @IBAction func didTapButton(_ sender: UIButton) {
+        let alertController = UIAlertController(title: "Enter Address", message: "We need your address for geocoding", preferredStyle: .alert)
+        alertController.addTextField(configurationHandler: { textfield in })
+        let confirmAction = UIAlertAction(title: "Pin Address", style: .default, handler: { _ in
+            guard let address = alertController.textFields?.first?.text else { return }
+            self.geocodeAndAnnotate(address: address)
+        })
+        alertController.addAction(confirmAction)
+        present(alertController, animated: true, completion: nil)
     }
 }
 
@@ -96,6 +106,18 @@ extension ViewController {
             let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
             imageView.image = snapshot.image
             annotationView.detailCalloutAccessoryView = imageView
+        })
+    }
+    private func geocodeAndAnnotate(address: String) {
+        let geocoder = CLGeocoder()
+        geocoder.geocodeAddressString(address, completionHandler: { placemarks, error in
+            guard error == nil,
+                  let placemarks = placemarks,
+                  let placemark = placemarks.first,
+                  let coordinates = placemark.location?.coordinate else { print(error!); return }
+            let newAnnotation = MKPointAnnotation()
+            newAnnotation.coordinate = coordinates
+            self.mapView.addAnnotation(newAnnotation)
         })
     }
 }
