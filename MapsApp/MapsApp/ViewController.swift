@@ -147,6 +147,7 @@ extension ViewController {
             for step in steps {
                 print(step.instructions)
             }
+            self.mapView.addOverlay(route.polyline, level: .aboveRoads)
         })
     }
 }
@@ -179,6 +180,12 @@ extension ViewController: MKMapViewDelegate {
         cluster.title = "Coffee, Games and Clothes"
         cluster.subtitle = "a group of cool places."
         return cluster
+    }
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.blue.withAlphaComponent(0.8)
+        renderer.lineWidth = 4
+        return renderer
     }
 }
 
