@@ -9,7 +9,7 @@ import MapKit
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     // MARK: - Properties
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
@@ -114,8 +114,9 @@ extension ViewController {
                   let placemarks = placemarks,
                   let placemark = placemarks.first,
                   let coordinate = placemark.location?.coordinate else { print(error!); return }
-//            self.annotate(coordinate: coordinate)
-            self.openMaps(coordinate: coordinate)
+            //            self.annotate(coordinate: coordinate)
+            //            self.openInMaps(coordinate: coordinate)
+            self.getDirection(coordinate: coordinate)
         })
     }
     private func annotate(coordinate: CLLocationCoordinate2D) {
@@ -123,10 +124,30 @@ extension ViewController {
         newAnnotation.coordinate = coordinate
         self.mapView.addAnnotation(newAnnotation)
     }
-    private func openMaps(coordinate: CLLocationCoordinate2D) {
+    private func openInMaps(coordinate: CLLocationCoordinate2D) {
         let destinationPlacemark = MKPlacemark(coordinate: coordinate)
         let mapItem = MKMapItem(placemark: destinationPlacemark)
         MKMapItem.openMaps(with: [mapItem], launchOptions: nil)
+    }
+    private func getDirection(coordinate: CLLocationCoordinate2D) {
+        let destinationPlacemark = MKPlacemark(coordinate: coordinate)
+        let sourcePoint = MKMapItem.forCurrentLocation()
+        let destinationPoint = MKMapItem(placemark: destinationPlacemark)
+        let request = MKDirections.Request()
+        request.transportType = .automobile
+        request.source = sourcePoint
+        request.destination = destinationPoint
+        let directions = MKDirections(request: request)
+        directions.calculate(completionHandler: { response, error in
+            guard error == nil,
+                  let response = response,
+                  let route = response.routes.first else { return }
+            let steps = route.steps
+            guard !steps.isEmpty else { return }
+            for step in steps {
+                print(step.instructions)
+            }
+        })
     }
 }
 
@@ -138,12 +159,12 @@ extension ViewController: CLLocationManagerDelegate {
 // MARK: - MKMapViewDelegate
 extension ViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
-//        setUserRegion(userLocation: userLocation)
+        //        setUserRegion(userLocation: userLocation)
         addAnnotationToMap()
     }
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation { return nil }
-//        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation") as? MKAnnotationView
+        //        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "annotation") as? MKAnnotationView
         let annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
         annotationView.clusteringIdentifier = "coffee "
         annotationView.glyphText = "Coffee"
